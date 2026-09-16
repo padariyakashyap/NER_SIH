@@ -1,0 +1,16 @@
+﻿.venv/
+__pycache__/
+*.pyc
+*.pt
+runs/
+datasets/
+.env
+
+# Datasets
+*.v6i.yolo26/
+*.zip
+*.pth
+
+# Landslide dataset
+*.tif
+*.tiff
