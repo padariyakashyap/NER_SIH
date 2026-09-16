@@ -1,0 +1,14 @@
+[
+    "bus_id",
+    "route_id",
+    "latitude",
+    "longitude",
+    "current_speed",
+    "historical_avg_speed",
+    "historical_delay_minutes",
+    "time_slot",
+    "nearest_stop_index",
+    "destination_stop_index",
+    "distance_to_destination_km",
+    "effective_speed"
+]
