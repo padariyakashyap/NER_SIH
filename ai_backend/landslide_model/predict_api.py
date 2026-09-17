@@ -11,7 +11,10 @@ from PIL import Image
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from torchvision import transforms
 
-from model import create_model
+try:
+    from .model import create_model
+except ImportError:
+    from model import create_model
 
 
 # ============================================================
