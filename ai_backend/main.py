@@ -1,83 +1,278 @@
 """
 Unified AI Backend Gateway (FastAPI)
 
-This module serves as the central entrypoint for the SIH AI Backend.
-It mounts individual model REST applications (`eta_model`, `landslide_model`)
-as sub-applications under distinct path prefixes (`/api/eta`, `/api/landslide`),
-preserving all existing standalone inference logic and endpoints without modification.
+NER-LogiAI / SIH Project
+
+Services:
+    - ETA Prediction
+    - Landslide Detection
+    - Route Calculation (OpenRouteService)
 """
 
 import sys
 from pathlib import Path
-from fastapi import FastAPI, HTTPException
+
+from fastapi import FastAPI
 import uvicorn
 
-# Ensure project root is in sys.path when running script directly
+
+# =====================================================
+# PROJECT CONFIGURATION
+# =====================================================
+
+# Get project root directory
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+# Ensure project root is available in Python path
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-# 1. Import ETA sub-application
+
+# =====================================================
+# IMPORT ETA API
+# =====================================================
+
 try:
+
     from ai_backend.eta_model.predict_api import app as eta_app
+
 except ImportError:
+
     from eta_model.predict_api import app as eta_app
 
-# 2. Import Landslide sub-application (safely handling optional PyTorch/PIL dependencies)
+
+# =====================================================
+# IMPORT LANDSLIDE API
+# =====================================================
+
 try:
+
     from ai_backend.landslide_model.predict_api import app as landslide_app
+
     landslide_available = True
+
     landslide_status_msg = "available"
+
 except Exception as err:
+
     landslide_app = None
+
     landslide_available = False
+
     landslide_status_msg = f"unavailable: {str(err)}"
 
 
-# 3. Create Main Unified Application
+# =====================================================
+# IMPORT ROUTE API
+# =====================================================
+
+try:
+
+    from ai_backend.route_api import app as route_app
+
+    route_available = True
+
+    route_status_msg = "available"
+
+except Exception as err:
+
+    route_app = None
+
+    route_available = False
+
+    route_status_msg = f"unavailable: {str(err)}"
+
+
+# =====================================================
+# IMPORT COMBINED RISK API
+# =====================================================
+
+try:
+
+    from ai_backend.risk_model.combined_risk_api import app as combined_risk_app
+
+    risk_available = True
+
+    risk_status_msg = "available"
+
+except Exception as err:
+
+    combined_risk_app = None
+
+    risk_available = False
+
+    risk_status_msg = f"unavailable: {str(err)}"
+
+
+from fastapi.middleware.cors import CORSMiddleware
+
+# =====================================================
+# CREATE MAIN FASTAPI APPLICATION
+# =====================================================
+
 app = FastAPI(
+
     title="NER-SIH Unified AI Backend API",
-    description="Unified API Gateway integrating public transit ETA prediction and Landslide detection models.",
-    version="1.0.0"
+
+    description=(
+        "Unified API Gateway integrating "
+        "ETA prediction, landslide detection, "
+        "combined risk engine, and hybrid route calculation."
+    ),
+
+    version="2.0.0"
+
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
-# 4. Mount sub-applications
-# ETA API sub-application mounted at /api/eta
-# All endpoints in eta_model/predict_api.py will be prefixed with /api/eta
-app.mount("/api/eta", eta_app)
+# =====================================================
+# MOUNT ETA API
+# =====================================================
 
-# Landslide API sub-application mounted at /api/landslide if dependencies are satisfied
+app.mount(
+
+    "/api/eta",
+
+    eta_app
+
+)
+
+
+# =====================================================
+# MOUNT ROUTE API
+# =====================================================
+
+if route_available and route_app is not None:
+
+    app.mount(
+
+        "/api/routes",
+
+        route_app
+
+    )
+
+
+# =====================================================
+# MOUNT COMBINED RISK API
+# =====================================================
+
+if risk_available and combined_risk_app is not None:
+
+    app.mount(
+
+        "/api/risk",
+
+        combined_risk_app
+
+    )
+
+
+# =====================================================
+# MOUNT LANDSLIDE API
+# =====================================================
+
 if landslide_available and landslide_app is not None:
-    app.mount("/api/landslide", landslide_app)
+
+    app.mount(
+
+        "/api/landslide",
+
+        landslide_app
+
+    )
 
 
-# 5. Unified Root Endpoint
+# =====================================================
+# ROOT ENDPOINT
+# =====================================================
+
 @app.get("/")
 def read_root():
-    """Unified root endpoint identifying the combined AI Backend Gateway."""
+
     return {
-        "message": "NER-SIH Unified AI Backend API Gateway is running",
+
+        "message": (
+            "NER-SIH Unified AI Backend "
+            "API Gateway is running"
+        ),
+
         "services": {
+
             "eta": "/api/eta",
-            "landslide": "/api/landslide" if landslide_available else None
+
+            "routes": (
+                "/api/routes"
+                if route_available
+                else None
+            ),
+
+            "risk": (
+                "/api/risk"
+                if risk_available
+                else None
+            ),
+
+            "landslide": (
+                "/api/landslide"
+                if landslide_available
+                else None
+            )
+
         },
+
         "docs": "/docs"
+
     }
 
 
-# 6. Unified Health Check Endpoint
+# =====================================================
+# HEALTH CHECK ENDPOINT
+# =====================================================
+
 @app.get("/health")
 def health_check():
-    """Unified health check status for all mounted AI services."""
+
     return {
+
         "status": "ok",
+
         "services": {
+
             "eta": "available",
+
+            "routes": route_status_msg,
+
+            "risk": risk_status_msg,
+
             "landslide": landslide_status_msg
+
         }
+
     }
 
 
+
+# =====================================================
+# RUN SERVER
+# =====================================================
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+
+    uvicorn.run(
+
+        app,
+
+        host="127.0.0.1",
+
+        port=8000
+
+    )

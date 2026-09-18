@@ -27,10 +27,10 @@ The app runs on Vite and uses the existing static WebDev scaffold.
 
 ## API integration
 
-When Demo Mode is disabled, the frontend first calls `POST /generate-routes` with origin/destination coordinates and `alternatives: 2`, then passes the returned available routes into `POST /analyze-route`. Configure the services with `VITE_API_BASE_URL`, `VITE_ROUTE_GENERATION_URL`, `VITE_ROUTE_ANALYSIS_URL`, and `VITE_COMBINED_RISK_URL`:
+When Demo Mode is disabled, the frontend calls `POST http://127.0.0.1:8000/api/routes/calculate` with origin/destination coordinates and `alternative_count: 2`. Configure the services with `VITE_API_BASE_URL` and `VITE_ROUTE_GENERATION_URL`:
 
 ```bash
-VITE_API_BASE_URL=http://127.0.0.1:8003 VITE_ROUTE_GENERATION_URL=http://127.0.0.1:8003/generate-routes VITE_ROUTE_ANALYSIS_URL=http://127.0.0.1:8003/analyze-route pnpm dev
+VITE_API_BASE_URL=http://127.0.0.1:8000 VITE_ROUTE_GENERATION_URL=http://127.0.0.1:8000/api/routes/calculate pnpm dev
 ```
 
 The UI intentionally stays in Demo Mode by default. Demo values match the requested API response shape and are clearly labeled. In API mode, fewer than three alternatives may be returned; the UI displays only the routes provided and never fabricates additional geometry. No real-time incident or traffic claims are made.
