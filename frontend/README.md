@@ -1,10 +1,10 @@
-# NER-LogiAI
+# NAVEXA
 
-NER-LogiAI is a polished Phase 1 frontend for a Northeast India Regional Logistics Intelligence Platform. It demonstrates a route-input → unified analysis API → risk assessment → route recommendation flow without overstating prototype data as live intelligence.
+NAVEXA is a polished Phase 1 frontend for a Northeast India Regional Logistics Intelligence Platform. It demonstrates a route-input → unified analysis API → risk assessment → route recommendation flow without overstating prototype data as live intelligence.
 
 ## What is included
 
-- Landing page with original NER-LogiAI identity
+- Landing page with original NAVEXA identity
 - Demo access login screen (no real authentication implemented)
 - Responsive intelligence dashboard
 - Functional route-analysis form with loading, success, validation, and fallback states
