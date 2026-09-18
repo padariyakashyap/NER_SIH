@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius: 0.85rem;
+}
+
+:root { --background: #f4f9fc; --foreground: #102052; --card: #ffffff; --card-foreground: #102052; --popover: #ffffff; --popover-foreground: #102052; --primary: #080d4d; --primary-foreground: #ffffff; --secondary: #eafbfd; --secondary-foreground: #0a637b; --muted: #eef5f8; --muted-foreground: #73869f; --accent: #19c8e8; --accent-foreground: #07104b; --destructive: #e85b6b; --destructive-foreground: #ffffff; --border: #d7e8f1; --input: #d7e8f1; --ring: #19c8e8; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: var(--background); font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button, a, select, input { font: inherit; }
+button:active, a:active { transform: scale(.98); }
+::selection { background: rgba(25,200,232,.28); color: #07104b; }
+
+@media (prefers-reduced-motion: no-preference) { .animate-pulse { animation-duration: 2.4s; } }

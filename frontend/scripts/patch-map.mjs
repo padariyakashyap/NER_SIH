@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+const dashboard = '/home/ubuntu/ner-logiai/client/src/pages/Dashboard.tsx';
+let d = fs.readFileSync(dashboard, 'utf8');
+d = d.replace('locations.map((item) => <option key={item}>{item}</option>)', 'locations.map((item) => <option key={item.name}>{item.name}</option>)');
+d = d.replace('import { locations } from "@/data/demoData";', 'import { locations } from "@/data/demoData";');
+d = d.replace('analyze({ origin, destination, route_selection: "All supplied routes", analysis_mode: mode })', 'analyze({ origin, destination, origin_coords: locations.find((item) => item.name === origin), destination_coords: locations.find((item) => item.name === destination), route_selection: "All supplied routes", analysis_mode: mode })');
+d = d.replace('<MapPanel/>', '<MapPanel routes={response.all_routes} recommendedRoute={response.recommended_route.route_name} selectedRoute={selected.route_name} origin={response.origin} destination={response.destination} loading={loading} error={error} onSelectRoute={(route) => setSelected(route)}/>');
+fs.writeFileSync(dashboard, d);
+const route = '/home/ubuntu/ner-logiai/client/src/pages/RouteAnalysis.tsx';
+let r = fs.readFileSync(route, 'utf8');
+r = r.replace('locations.map((loc) => <option key={loc}>{loc}</option>)', 'locations.map((loc) => <option key={loc.name}>{loc.name}</option>)');
+r = r.replace('analyze({ origin, destination, route_selection: routeSelection, analysis_mode: mode })', 'analyze({ origin, destination, origin_coords: locations.find((item) => item.name === origin), destination_coords: locations.find((item) => item.name === destination), route_selection: routeSelection, analysis_mode: mode })');
+r = r.replace('<MapPanel/>', '<MapPanel routes={response.all_routes} recommendedRoute={response.recommended_route.route_name} selectedRoute={selected.route_name} origin={response.origin} destination={response.destination} loading={loading} error={error} onSelectRoute={(route) => setSelected(route)}/>');
+fs.writeFileSync(route, r);
