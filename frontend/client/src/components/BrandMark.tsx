@@ -8,8 +8,8 @@ export function BrandMark({ dark = true }: { dark?: boolean }) {
         <span className="absolute -right-1 -top-1 size-2 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(25,200,232,0.9)]" />
       </div>
       <div className="leading-none">
-        <div className={`text-[17px] font-semibold tracking-[-0.03em] ${dark ? "text-white" : "text-[#0b1859]"}`}>NER-Logi<span className="text-cyan-500">AI</span></div>
-        <div className={`mt-1 text-[9px] font-mono uppercase tracking-[0.18em] ${dark ? "text-slate-400" : "text-slate-500"}`}>regional intelligence</div>
+        <div className={`text-[17px] font-semibold tracking-[-0.03em] ${dark ? "text-white" : "text-[#0b1859]"}`}>NAV<span className="text-cyan-500">EXA</span></div>
+        <div className={`mt-1 text-[9px] font-mono uppercase tracking-[0.18em] ${dark ? "text-slate-400" : "text-slate-500"}`}>REGIONAL INTELLIGENCE</div>
       </div>
     </div>
   );
